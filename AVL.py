@@ -171,7 +171,7 @@ class AVL:
 
             return "Livro removido!"
         elif title < root.getTitle():
-            self.remove(root.getLeft(), title)
+            self.remove(root.getLeft(), title, root)
         elif title > root.getTitle():
             self.remove(root.getRight(), title, root)
         elif self.getRoot().getTitle() == None:

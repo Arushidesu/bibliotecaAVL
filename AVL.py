@@ -44,8 +44,8 @@ class AVL:
         oldLeft = root.getLeft()
         root.setLeft(root.getRight())
         root.setRight(root.getRight().getRight())
+        root.getLeft().setRight(root.getLeft().getLeft())
         root.getLeft().setLeft(oldLeft)
-        root.getLeft().setRight(root.getRight().getLeft())
 
     def rotationRight(self, root):
         tempTitle, tempYear = root.getTitle(), root.getYear()
@@ -54,16 +54,11 @@ class AVL:
         root.getLeft().setTitle(tempTitle)
         root.getLeft().setYear(tempYear)
 
-        oldRight = root.getRight() # None
-        root.setRight(root.getLeft()) # C < B > C
+        oldRight = root.getRight()
+        root.setRight(root.getLeft())
         root.setLeft(root.getLeft().getLeft())
-        root.getRight().setLeft(root.getLeft().getRight())
+        root.getRight().setLeft(root.getRight().getRight())
         root.getRight().setRight(oldRight)
-
-
-        # root.setRight(root.getLeft())
-        # root.getRight().setLeft(root.getRight().getRight())
-        # root.getRight().setRight(oldRight)
 
     def rotationDoubleRight(self, root):
         self.rotationLeft(root.getLeft())
@@ -72,6 +67,28 @@ class AVL:
     def rotationDoubleLeft(self, root):
         self.rotationRight(root.getRight())
         self.rotationLeft(root)
+
+    def listBook(self):
+        self.inOrder(self.getRoot())
+
+    def inOrder(self, root, cond=False, year=None):
+        if cond:
+            if root != None:
+                self.inOrder(root.getLeft(), True, year)
+                if root.getYear() == year:
+                    print(root)
+                self.inOrder(root.getRight(), True, year)
+        else:
+            if root != None:
+                self.inOrder(root.getLeft())
+                print(root)
+                self.inOrder(root.getRight())
+
+    def postOrder(self, root):
+        if root != None:
+            self.postOrder(root.getLeft())
+            self.postOrder(root.getRight())
+            self.tryBalance(root)
 
     def tryBalance(self, root):
         balance = self.balanceFactor(root)
@@ -103,8 +120,11 @@ class AVL:
             else:
                 self.insert(root.getRight(), title, year)
 
-        self.tryBalance(self.getRoot())
+        self.postOrder(self.getRoot())
     
+    def searchYear(self, year):
+        self.inOrder(self.getRoot(), True, year)
+
     def searchBook(self, title):
         if self.getRoot() != None:
             self.search(self.getRoot(), title)
@@ -113,7 +133,8 @@ class AVL:
 
     def search(self, root, title):
         if root.getTitle() == title:
-            return f'O livro foi encontrado!\n\tNome: {root.getTitle()}\n\tAno: {root.getYear()}'
+            result = 'O livro foi encontrado!\n\tNome: ' + root.getTitle() + '\n\tAno: ' + str(root.getYear())
+            return result
         elif title < root.getTitle():
             return self.search(root.getLeft(), title)
         elif title > self.getRoot().getTitle():
@@ -167,7 +188,7 @@ class AVL:
                 child.setTitle(tempTitle)
                 child.setYear(tempYear)
                 self.remove(root.getRight(), child.getTitle(), root)
-            self.tryBalance(self.getRoot())
+            self.postOrder(self.getRoot())
 
             return "Livro removido!"
         elif title < root.getTitle():

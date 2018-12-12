@@ -30,5 +30,5 @@ class No:
         self.__right = right
 
     def __str__(self):
-        result = 'Nome: ' +  str(self.getTitle()) + '\nAno: ' + str(self.getYear()) + '\n-----------'
+        result = '\nTítulo: ' +  str(self.getTitle()) + '\nAno: ' + str(self.getYear()) + '\n-----------\n'
         return result

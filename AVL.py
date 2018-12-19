@@ -214,7 +214,12 @@ class AVL:
                 else:
                     pai.setRight(None)
             elif self.oneChild(root):
-                if root.getLeft() == None:
+                if root == self.getRoot():
+                    if root.getLeft() == None:
+                        self.setRoot(root.getRight())
+                    else:
+                        self.setRoot(root.getLeft()) # < O problema da remoção estava aqui, o getLeft() estava errado. Só isso.
+                elif root.getLeft() == None:
                     if pai.getLeft() == root:
                         pai.setLeft(root.getRight())
                     else:
